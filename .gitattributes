@@ -1,0 +1,12 @@
+# W repozytorium wszystkie pliki tekstowe mają końce linii LF
+* text=auto eol=lf
+
+# Skrypty wsadowe Windows wymagają CRLF
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Pliki binarne: Git ich nie zmienia i nie pokazuje różnic tekstowych
+*.ico binary
+*.png binary
+*.jpg binary
+*.jar binary

@@ -1,0 +1,15 @@
+# Pliki systemowe
+.DS_Store
+Thumbs.db
+
+# Osobiste ustawienia IDE
+.idea/
+*.iml
+
+# Sekrety i lokalne zmienne środowiskowe
+.env
+.env.*
+!.env.example
+
+# Logi
+*.log

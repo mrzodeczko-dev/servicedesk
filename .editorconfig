@@ -1,0 +1,22 @@
+# Wspólne ustawienia edytora dla całego repozytorium: https://editorconfig.org
+# servicedesk-web ma własny plik .editorconfig z root = true
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Kod z Spring Initializr używa tabulatorów
+[*.{java,xml}]
+indent_style = tab
+indent_size = 4
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.{cmd,bat}]
+end_of_line = crlf
