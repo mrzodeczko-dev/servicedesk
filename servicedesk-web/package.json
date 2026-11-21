@@ -35,5 +35,11 @@
       "onFail": "error",
       "version": "^26.0.0"
     }
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true,
+    "esbuild@0.28.2": true,
+    "lmdb@3.5.9": true,
+    "msgpackr-extract@3.0.7": true
   }
 }
