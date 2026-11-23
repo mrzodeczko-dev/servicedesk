@@ -13,3 +13,8 @@ Thumbs.db
 
 # Logi
 *.log
+
+# Zależności i wyniki budowania
+node_modules/
+dist/
+target/
