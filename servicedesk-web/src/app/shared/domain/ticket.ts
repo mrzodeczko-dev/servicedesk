@@ -12,14 +12,12 @@ export interface Ticket {
   readonly createdAt: string; // Instant from the API as ISO 8601 text
   readonly dueAt: string | null;
   readonly resolvedAt: string | null;
-  }
+}
 
 export function isOpen(ticket: Ticket): boolean {
   return ticket.status === 'NEW' || ticket.status === 'IN_PROGRESS' || ticket.status === 'WAITING';
 }
 
-export function isAssigned(ticket: Ticket):boolean {
+export function isAssigned(ticket: Ticket): boolean {
   return ticket.assigneeId !== null;
 }
-
-
