@@ -21,3 +21,5 @@ export function isOpen(ticket: Ticket): boolean {
 export function isAssigned(ticket: Ticket):boolean {
   return ticket.assigneeId !== null;
 }
+
+
