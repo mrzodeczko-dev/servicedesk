@@ -1,7 +1,6 @@
 import { isAssigned, isOpen, type Ticket } from './ticket';
 import type { TicketStatus } from './ticket-status';
 
-
 function createTicket(status: TicketStatus, assigneeId: number | null): Ticket {
   return {
     id: 1,
@@ -27,17 +26,18 @@ describe('isOpen', () => {
     expect(isOpen(createTicket('RESOLVED', null))).toBe(false);
     expect(isOpen(createTicket('CLOSED', null))).toBe(false);
   });
+});
 
-  describe('isAssigned', () => {
-    it('returns false when assigneeId is null', () => {
-      expect(isAssigned(createTicket('NEW', null))).toBe(false);
-    })
-    it('returns true when assigneeId is set', () => {
-      expect(isAssigned(createTicket('NEW', 7))).toBe(true);
-    })
+describe('isAssigned', () => {
+  it('returns false when assigneeId is null', () => {
+    expect(isAssigned(createTicket('NEW', null))).toBe(false);
+  });
 
-    it('returns true when assigneeId is 0', () => {
-      expect(isAssigned(createTicket('NEW', 0))).toBe(true);
-    });
-  })
-})
+  it('returns true when assigneeId is set', () => {
+    expect(isAssigned(createTicket('NEW', 7))).toBe(true);
+  });
+
+  it('returns true when assigneeId is 0', () => {
+    expect(isAssigned(createTicket('NEW', 0))).toBe(true);
+  });
+});
