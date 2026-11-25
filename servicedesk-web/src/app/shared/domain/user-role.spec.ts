@@ -11,7 +11,7 @@ describe('isStaff', () => {
 });
 
 describe('USER_ROLES', () => {
-  it('list users', () => {
+  it('lists roles in the order used by the API', () => {
     expect(USER_ROLES).toEqual(['USER', 'AGENT', 'ADMIN']);
   });
 });
