@@ -18,6 +18,7 @@ export function isOpen(ticket: Ticket): boolean {
   return ticket.status === 'NEW' || ticket.status === 'IN_PROGRESS' || ticket.status === 'WAITING';
 }
 
+// 0 is a valid id, so compare with null instead of checking truthiness.
 export function isAssigned(ticket: Ticket): boolean {
   return ticket.assigneeId !== null;
 }
