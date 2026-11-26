@@ -1,5 +1,5 @@
 import type { Ticket } from './ticket';
-import { sortTickets } from './ticket-list';
+import { groupByStatus, sortTickets } from './ticket-list';
 
 // Default values describe a typical ticket, each test overrides only the fields it checks.
 function createTicket(overrides: Partial<Ticket> = {}): Ticket {
@@ -55,5 +55,29 @@ describe('sortTickets', () => {
     const sorted = sortTickets(shuffled, { field: 'id', direction: 'asc' });
 
     expect(sorted.map((ticket) => ticket.id)).toEqual([1, 2, 3]);
+  });
+});
+
+describe('groupByStatus', () => {
+  it('puts tickets into the groups of their statuses in input order', () => {
+    const tickets = [
+      createTicket({ id: 1, status: 'NEW' }),
+      createTicket({ id: 2, status: 'WAITING' }),
+      createTicket({ id: 3, status: 'NEW' }),
+    ];
+
+    const groups = groupByStatus(tickets);
+
+    expect(groups.NEW.map((ticket) => ticket.id)).toEqual([1, 3]);
+    expect(groups.WAITING.map((ticket) => ticket.id)).toEqual([2]);
+  });
+
+  it('returns empty arrays for statuses without tickets', () => {
+    const groups = groupByStatus([createTicket({ status: 'NEW' })]);
+
+    expect(groups.IN_PROGRESS).toEqual([]);
+    expect(groups.WAITING).toEqual([]);
+    expect(groups.RESOLVED).toEqual([]);
+    expect(groups.CLOSED).toEqual([]);
   });
 });

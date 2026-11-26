@@ -1,5 +1,6 @@
 import type { Ticket } from './ticket';
 import type { TicketPriority } from './ticket-priority';
+import type { TicketStatus } from './ticket-status';
 
 // Operations on ticket lists. All functions are pure: they never change the input array.
 
@@ -31,4 +32,22 @@ function compareBy(sort: TicketSort): (a: Ticket, b: Ticket) => number {
 // toSorted returns a new array, sort would change the caller's array.
 export function sortTickets(tickets: readonly Ticket[], sort: TicketSort): readonly Ticket[] {
   return tickets.toSorted(compareBy(sort));
+}
+
+// Every status has a group, a status without tickets keeps an empty array.
+export function groupByStatus(
+  tickets: readonly Ticket[],
+): Readonly<Record<TicketStatus, readonly Ticket[]>> {
+  const initial: Record<TicketStatus, Ticket[]> = {
+    NEW: [],
+    IN_PROGRESS: [],
+    WAITING: [],
+    RESOLVED: [],
+    CLOSED: [],
+  };
+  // push changes only the arrays created above, never the input, so the function stays pure.
+  return tickets.reduce((groups, ticket) => {
+    groups[ticket.status].push(ticket);
+    return groups;
+  }, initial);
 }
