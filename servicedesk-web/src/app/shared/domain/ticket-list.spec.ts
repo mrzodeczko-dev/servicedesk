@@ -56,6 +56,17 @@ describe('sortTickets', () => {
 
     expect(sorted.map((ticket) => ticket.id)).toEqual([1, 2, 3]);
   });
+
+  // readonly is checked only by the compiler, a frozen array also fails at run time when changed.
+  it('does not change a frozen input and returns a new array', () => {
+    const input = Object.freeze([createTicket({ id: 2 }), createTicket({ id: 1 })]);
+    const copy = structuredClone(input);
+
+    const sorted = sortTickets(input, { field: 'id', direction: 'asc' });
+
+    expect(input).toEqual(copy);
+    expect(sorted).not.toBe(input);
+  });
 });
 
 describe('groupByStatus', () => {
@@ -79,5 +90,17 @@ describe('groupByStatus', () => {
     expect(groups.WAITING).toEqual([]);
     expect(groups.RESOLVED).toEqual([]);
     expect(groups.CLOSED).toEqual([]);
+  });
+
+  it('does not change a frozen input', () => {
+    const input = Object.freeze([
+      createTicket({ id: 1, status: 'NEW' }),
+      createTicket({ id: 2, status: 'CLOSED' }),
+    ]);
+    const copy = structuredClone(input);
+
+    groupByStatus(input);
+
+    expect(input).toEqual(copy);
   });
 });
