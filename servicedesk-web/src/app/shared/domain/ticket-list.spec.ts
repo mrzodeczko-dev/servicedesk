@@ -1,5 +1,5 @@
 import type { Ticket } from './ticket';
-import { groupByStatus, sortTickets } from './ticket-list';
+import { filterTickets, groupByStatus, sortTickets } from './ticket-list';
 
 // Default values describe a typical ticket, each test overrides only the fields it checks.
 function createTicket(overrides: Partial<Ticket> = {}): Ticket {
@@ -100,6 +100,53 @@ describe('groupByStatus', () => {
     const copy = structuredClone(input);
 
     groupByStatus(input);
+
+    expect(input).toEqual(copy);
+  });
+});
+
+describe('filterTickets', () => {
+  const ticket1 = createTicket({ id: 1, status: 'NEW', priority: 'HIGH', assigneeId: null });
+  const ticket2 = createTicket({ id: 2, status: 'NEW', priority: 'LOW', assigneeId: 0 });
+  const ticket3 = createTicket({ id: 3, status: 'WAITING', priority: 'HIGH', assigneeId: 7 });
+  const tickets = [ticket1, ticket2, ticket3];
+
+  it('returns every ticket in a new array for an empty filter', () => {
+    const filtered = filterTickets(tickets, {});
+
+    expect(filtered).toEqual(tickets);
+    expect(filtered).not.toBe(tickets);
+  });
+
+  it('ignores a criterion set to undefined', () => {
+    const filtered = filterTickets(tickets, { status: undefined });
+
+    expect(filtered).toEqual(tickets);
+  });
+
+  it('keeps only unassigned tickets for assigneeId null', () => {
+    const filtered = filterTickets(tickets, { assigneeId: null });
+
+    expect(filtered).toEqual([ticket1]);
+  });
+
+  it('keeps tickets of user 0 for assigneeId 0', () => {
+    const filtered = filterTickets(tickets, { assigneeId: 0 });
+
+    expect(filtered).toEqual([ticket2]);
+  });
+
+  it('requires every given criterion to match', () => {
+    const filtered = filterTickets(tickets, { status: 'WAITING', priority: 'HIGH' });
+
+    expect(filtered).toEqual([ticket3]);
+  });
+
+  it('does not change a frozen input', () => {
+    const input = Object.freeze([...tickets]);
+    const copy = structuredClone(input);
+
+    filterTickets(input, { priority: 'HIGH' });
 
     expect(input).toEqual(copy);
   });

@@ -51,3 +51,17 @@ export function groupByStatus(
     return groups;
   }, initial);
 }
+
+// A field that is left out or set to undefined adds no criterion.
+export type TicketFilter = Partial<Pick<Ticket, 'status' | 'priority' | 'assigneeId'>>;
+
+// A ticket stays in the result only when it matches every given criterion.
+export function filterTickets(tickets: readonly Ticket[], filter: TicketFilter): readonly Ticket[] {
+  return tickets.filter(
+    // Only undefined means "no criterion": null is a valid filter for unassigned tickets and 0 is a valid user id.
+    (ticket) =>
+      (filter.status === undefined || ticket.status === filter.status) &&
+      (filter.priority === undefined || ticket.priority === filter.priority) &&
+      (filter.assigneeId === undefined || ticket.assigneeId === filter.assigneeId),
+  );
+}
