@@ -1,5 +1,4 @@
 import { isOpen, type Ticket } from './ticket';
-import { tick } from '@angular/core/testing';
 
 // Dates from the API are ISO 8601 texts with an offset, e.g. "2026-03-29T01:30:00Z".
 
