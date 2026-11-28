@@ -92,4 +92,15 @@ describe('formatTicketDate', () => {
   it('shows a summer date in Warsaw time (UTC+2)', () => {
     expect(formatTicketDate('2026-07-15T09:15:00Z')).toBe('15.07.2026, 11:15');
   });
+
+  // Warsaw changes the clock at 01:00 UTC: on 29.03.2026 from 02:00 to 03:00,
+  // on 25.10.2026 from 03:00 back to 02:00, so two instants show the same text.
+  it.each([
+    { name: 'before the change', iso: '2026-03-29T00:59:00Z', text: '29.03.2026, 01:59' },
+    { name: 'after the change', iso: '2026-03-29T01:00:00Z', text: '29.03.2026, 03:00' },
+    { name: 'before the change', iso: '2026-10-25T00:30:00Z', text: '25.10.2026, 02:30' },
+    { name: 'after the change', iso: '2026-10-25T01:30:00Z', text: '25.10.2026, 02:30' },
+  ])('shows $text $name', ({ iso, text }) => {
+    expect(formatTicketDate(iso)).toBe(text);
+  });
 });
