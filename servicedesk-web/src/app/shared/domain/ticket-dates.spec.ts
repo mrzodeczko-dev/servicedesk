@@ -1,12 +1,12 @@
-import { Ticket } from './ticket';
-
+import type { Ticket } from './ticket';
 import { formatTicketDate, isDueToday, isOverdue } from './ticket-dates';
 
+// Same factory as in ticket-list.spec.ts, a shared one pays off with the third test file.
 function createTicket(overrides: Partial<Ticket> = {}): Ticket {
   return {
     id: 1,
-    title: 'Printed does not work',
-    description: 'The printer on the 2nd floor prints blank pages',
+    title: 'Printer does not work',
+    description: 'The printer on the 2nd floor prints blank pages.',
     status: 'NEW',
     priority: 'MEDIUM',
     assigneeId: null,
@@ -130,5 +130,4 @@ describe('isDueToday', () => {
   it.each(testCases)('returns $expected for dueAt=$dueAt', ({ dueAt, expected }) => {
     expect(isDueToday(createTicket({ dueAt }), now)).toBe(expected);
   });
-
 });
