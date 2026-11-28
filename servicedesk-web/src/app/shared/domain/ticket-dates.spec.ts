@@ -1,6 +1,6 @@
 import { Ticket } from './ticket';
 
-import { formatTicketDate, isOverdue } from './ticket-dates';
+import { formatTicketDate, isDueToday, isOverdue } from './ticket-dates';
 
 function createTicket(overrides: Partial<Ticket> = {}): Ticket {
   return {
@@ -103,4 +103,32 @@ describe('formatTicketDate', () => {
   ])('shows $text $name', ({ iso, text }) => {
     expect(formatTicketDate(iso)).toBe(text);
   });
+});
+
+describe('isDueToday', () => {
+  const now = new Date('2026-03-29T21:30:00Z');
+
+  const testCases = [
+    {
+      dueAt: '2026-03-28T23:30:00Z',
+      expected: true,
+    },
+    {
+      dueAt: '2026-03-29T21:59:59Z',
+      expected: true,
+    },
+    {
+      dueAt: '2026-03-29T22:00:00Z',
+      expected: false,
+    },
+  ];
+
+  it('returns false for tickets without due date', () => {
+    expect(isDueToday(createTicket({ dueAt: null }), now)).toBe(false);
+  });
+
+  it.each(testCases)('returns $expected for dueAt=$dueAt', ({ dueAt, expected }) => {
+    expect(isDueToday(createTicket({ dueAt }), now)).toBe(expected);
+  });
+
 });
