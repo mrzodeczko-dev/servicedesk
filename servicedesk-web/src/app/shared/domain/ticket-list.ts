@@ -27,6 +27,7 @@ function compareBy(sort: TicketSort): (a: Ticket, b: Ticket) => number {
     return (a, b) => sign * (PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority]);
   }
   if (sort.field === 'createdAt') {
+    // Compare instants: '.500Z' or '+01:00' in ISO texts would break a text comparison.
     return (a, b) => sign * (Date.parse(a.createdAt) - Date.parse(b.createdAt));
   }
 
