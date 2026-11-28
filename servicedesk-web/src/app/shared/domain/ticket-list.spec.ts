@@ -137,9 +137,9 @@ describe('filterTickets', () => {
   });
 
   it('requires every given criterion to match', () => {
-    const filtered = filterTickets(tickets, { status: 'WAITING', priority: 'HIGH' });
+    const filtered = filterTickets(tickets, { status: 'NEW', priority: 'HIGH' });
 
-    expect(filtered).toEqual([ticket3]);
+    expect(filtered).toEqual([ticket1]);
   });
 
   it('does not change a frozen input', () => {
