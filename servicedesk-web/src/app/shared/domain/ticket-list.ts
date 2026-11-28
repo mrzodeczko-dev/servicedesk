@@ -57,8 +57,9 @@ export type TicketFilter = Partial<Pick<Ticket, 'status' | 'priority' | 'assigne
 
 // A ticket stays in the result only when it matches every given criterion.
 export function filterTickets(tickets: readonly Ticket[], filter: TicketFilter): readonly Ticket[] {
+  // Only undefined means "no criterion": null is a valid filter
+  // for unassigned tickets and 0 is a valid user id.
   return tickets.filter(
-    // Only undefined means "no criterion": null is a valid filter for unassigned tickets and 0 is a valid user id.
     (ticket) =>
       (filter.status === undefined || ticket.status === filter.status) &&
       (filter.priority === undefined || ticket.priority === filter.priority) &&
