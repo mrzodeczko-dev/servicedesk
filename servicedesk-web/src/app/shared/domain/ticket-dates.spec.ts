@@ -108,16 +108,20 @@ describe('formatTicketDate', () => {
 describe('isDueToday', () => {
   const now = new Date('2026-03-29T21:30:00Z');
 
+  // 29.03.2026 lasts 23 hours in Warsaw: from 2026-03-28T23:00:00Z to 2026-03-29T22:00:00Z.
   const testCases = [
     {
+      name: 'at 00:30 in Warsaw, still 28.03 in UTC',
       dueAt: '2026-03-28T23:30:00Z',
       expected: true,
     },
     {
+      name: 'at the last second of the Warsaw day',
       dueAt: '2026-03-29T21:59:59Z',
       expected: true,
     },
     {
+      name: 'at midnight of the next Warsaw day, still 29.03 in UTC',
       dueAt: '2026-03-29T22:00:00Z',
       expected: false,
     },
@@ -127,7 +131,7 @@ describe('isDueToday', () => {
     expect(isDueToday(createTicket({ dueAt: null }), now)).toBe(false);
   });
 
-  it.each(testCases)('returns $expected for dueAt=$dueAt', ({ dueAt, expected }) => {
+  it.each(testCases)('returns $expected $name', ({ dueAt, expected }) => {
     expect(isDueToday(createTicket({ dueAt }), now)).toBe(expected);
   });
 });
