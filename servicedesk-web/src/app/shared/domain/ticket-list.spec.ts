@@ -118,8 +118,8 @@ describe('filterTickets', () => {
     expect(filtered).not.toBe(tickets);
   });
 
-  it('ignores a criterion set to undefined', () => {
-    const filtered = filterTickets(tickets, { status: undefined });
+  it('ignores criteria set to undefined', () => {
+    const filtered = filterTickets(tickets, { status: undefined, assigneeId: undefined });
 
     expect(filtered).toEqual(tickets);
   });
