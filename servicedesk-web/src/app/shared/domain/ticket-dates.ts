@@ -10,3 +10,15 @@ export function isOverdue(ticket: Ticket, now: Date): boolean {
 
   return now.getTime() > Date.parse(ticket.dueAt);
 }
+
+// One formatter for the module, MDN recommends reusing it for many dates.
+const TICKET_DATE_FORMAT = new Intl.DateTimeFormat('pl-PL', {
+  timeZone: 'Europe/Warsaw',
+  dateStyle: 'short',
+  timeStyle: 'short',
+});
+
+// The service desk works in Warsaw time, so the text does not depend on the computer's time zone.
+export function formatTicketDate(isoText: string): string {
+  return TICKET_DATE_FORMAT.format(new Date(isoText));
+}

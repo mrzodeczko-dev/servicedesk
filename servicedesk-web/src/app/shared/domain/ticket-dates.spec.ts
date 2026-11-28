@@ -1,6 +1,6 @@
 import { Ticket } from './ticket';
 
-import { isOverdue } from './ticket-dates';
+import { formatTicketDate, isOverdue } from './ticket-dates';
 
 function createTicket(overrides: Partial<Ticket> = {}): Ticket {
   return {
@@ -81,5 +81,15 @@ describe('isOverdue', () => {
     const ticket = createTicket({ status: 'WAITING', dueAt });
 
     expect(isOverdue(ticket, new Date('2026-11-25T16:30:00Z'))).toBe(true);
+  });
+});
+
+describe('formatTicketDate', () => {
+  it('shows a winter date in Warsaw time (UTC+1)', () => {
+    expect(formatTicketDate('2026-01-15T09:15:00Z')).toBe('15.01.2026, 10:15');
+  });
+
+  it('shows a summer date in Warsaw time (UTC+2)', () => {
+    expect(formatTicketDate('2026-07-15T09:15:00Z')).toBe('15.07.2026, 11:15');
   });
 });
