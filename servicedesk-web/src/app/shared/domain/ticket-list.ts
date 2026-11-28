@@ -7,7 +7,7 @@ import type { TicketStatus } from './ticket-status';
 export type SortDirection = 'asc' | 'desc';
 
 export interface TicketSort {
-  readonly field: 'id' | 'priority';
+  readonly field: 'id' | 'priority' | 'createdAt';
   readonly direction: SortDirection;
 }
 
@@ -26,6 +26,10 @@ function compareBy(sort: TicketSort): (a: Ticket, b: Ticket) => number {
   if (sort.field === 'priority') {
     return (a, b) => sign * (PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority]);
   }
+  if (sort.field === 'createdAt') {
+    return (a, b) => sign * (Date.parse(a.createdAt) - Date.parse(b.createdAt));
+  }
+
   return (a, b) => sign * (a.id - b.id);
 }
 
