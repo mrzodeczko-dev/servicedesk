@@ -25,20 +25,19 @@ describe('sortTickets', () => {
     createTicket({ id: 4, priority: 'HIGH' }),
   ];
 
-  const createdAtTestCases = [
-    createTicket({ id: 1, createdAt: '2026-11-25T09:15:00.500Z' }),
-    createTicket({ id: 2, createdAt: '2026-11-25T10:00:00+01:00' }),
-    createTicket({ id: 3, createdAt: '2026-11-25T09:15:00Z' }),
-  ];
+  it.each([
+    { direction: 'asc', expected: [2, 3, 1] },
+    { direction: 'desc', expected: [1, 3, 2] },
+  ] as const)('sorts by createdAt for $direction', ({ direction, expected }) => {
+    const created = [
+      createTicket({ id: 1, createdAt: '2026-11-25T09:15:00.500Z' }),
+      createTicket({ id: 2, createdAt: '2026-11-25T10:00:00+01:00' }),
+      createTicket({ id: 3, createdAt: '2026-11-25T09:15:00Z' }),
+    ];
 
-  it('sorts by createdAt for desc', () => {
-    const sorted = sortTickets([...createdAtTestCases], { field: 'createdAt', direction: 'desc' });
-    expect(sorted.map((t) => t.id)).toEqual([1, 3, 2]);
-  });
+    const sorted = sortTickets(created, { field: 'createdAt', direction });
 
-  it('sorts by createdAt for asc', () => {
-    const sorted = sortTickets([...createdAtTestCases], { field: 'createdAt', direction: 'asc' });
-    expect(sorted.map((t) => t.id)).toEqual([2, 3, 1]);
+    expect(sorted.map((ticket) => ticket.id)).toEqual(expected);
   });
 
   it('sorts by priority from CRITICAL to LOW for desc', () => {
