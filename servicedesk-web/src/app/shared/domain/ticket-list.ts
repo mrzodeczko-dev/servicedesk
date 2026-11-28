@@ -7,7 +7,7 @@ import type { TicketStatus } from './ticket-status';
 export type SortDirection = 'asc' | 'desc';
 
 export interface TicketSort {
-  readonly field: 'id' | 'priority';
+  readonly field: 'id' | 'priority' | 'createdAt';
   readonly direction: SortDirection;
 }
 
@@ -26,6 +26,11 @@ function compareBy(sort: TicketSort): (a: Ticket, b: Ticket) => number {
   if (sort.field === 'priority') {
     return (a, b) => sign * (PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority]);
   }
+  if (sort.field === 'createdAt') {
+    // Compare instants: '.500Z' or '+01:00' in ISO texts would break a text comparison.
+    return (a, b) => sign * (Date.parse(a.createdAt) - Date.parse(b.createdAt));
+  }
+
   return (a, b) => sign * (a.id - b.id);
 }
 
@@ -57,8 +62,9 @@ export type TicketFilter = Partial<Pick<Ticket, 'status' | 'priority' | 'assigne
 
 // A ticket stays in the result only when it matches every given criterion.
 export function filterTickets(tickets: readonly Ticket[], filter: TicketFilter): readonly Ticket[] {
+  // Only undefined means "no criterion": null is a valid filter
+  // for unassigned tickets and 0 is a valid user id.
   return tickets.filter(
-    // Only undefined means "no criterion": null is a valid filter for unassigned tickets and 0 is a valid user id.
     (ticket) =>
       (filter.status === undefined || ticket.status === filter.status) &&
       (filter.priority === undefined || ticket.priority === filter.priority) &&

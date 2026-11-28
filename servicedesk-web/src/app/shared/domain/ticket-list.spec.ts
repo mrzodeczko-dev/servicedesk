@@ -25,6 +25,21 @@ describe('sortTickets', () => {
     createTicket({ id: 4, priority: 'HIGH' }),
   ];
 
+  it.each([
+    { direction: 'asc', expected: [2, 3, 1] },
+    { direction: 'desc', expected: [1, 3, 2] },
+  ] as const)('sorts by createdAt for $direction', ({ direction, expected }) => {
+    const created = [
+      createTicket({ id: 1, createdAt: '2026-11-25T09:15:00.500Z' }),
+      createTicket({ id: 2, createdAt: '2026-11-25T10:00:00+01:00' }),
+      createTicket({ id: 3, createdAt: '2026-11-25T09:15:00Z' }),
+    ];
+
+    const sorted = sortTickets(created, { field: 'createdAt', direction });
+
+    expect(sorted.map((ticket) => ticket.id)).toEqual(expected);
+  });
+
   it('sorts by priority from CRITICAL to LOW for desc', () => {
     const sorted = sortTickets(tickets, { field: 'priority', direction: 'desc' });
 
@@ -118,8 +133,8 @@ describe('filterTickets', () => {
     expect(filtered).not.toBe(tickets);
   });
 
-  it('ignores a criterion set to undefined', () => {
-    const filtered = filterTickets(tickets, { status: undefined });
+  it('ignores criteria set to undefined', () => {
+    const filtered = filterTickets(tickets, { status: undefined, assigneeId: undefined });
 
     expect(filtered).toEqual(tickets);
   });
@@ -137,9 +152,9 @@ describe('filterTickets', () => {
   });
 
   it('requires every given criterion to match', () => {
-    const filtered = filterTickets(tickets, { status: 'WAITING', priority: 'HIGH' });
+    const filtered = filterTickets(tickets, { status: 'NEW', priority: 'HIGH' });
 
-    expect(filtered).toEqual([ticket3]);
+    expect(filtered).toEqual([ticket1]);
   });
 
   it('does not change a frozen input', () => {
